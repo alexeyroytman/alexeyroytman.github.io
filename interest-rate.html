@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+
+<NOSCRIPT>
+<B>This page uses JavaScript</B><BR>
+</NOSCRIPT>
+
+
+<SCRIPT LANGUAGE="JavaScript">
+<!-- Begin to hide script contents from old browsers.
+
+//
+// Copyright (c) Alexey Roytman, 2002
+// roytman AT cs DOT bgu DOT ac DOT il
+//
+
+function money (n) {
+  var r = n + 0.5 / 100;
+  var l = r.toFixed(2)*100;
+  return  l / 100.0;
+}
+
+// monthly payment for a loan for n years, annual rate a% divided monthly, and sum $T
+function monthly(n,a,T) {
+	n = n * 12;
+	a = a / 100;
+	var b = a / 12;	// month percent
+	var z = Math.pow(1+b,n);	// cumulative percent
+	var t = T * b * z / (z - 1);	// equal payment
+	var tx= money(t);
+
+	w = window.open("","InterestRateResult",
+			"toolbar=no,location=no,directories=no,menubar=yes,scrollbars=yes,width=450,height=200");
+	w.document.open();
+	w.document.writeln ("<HTML><HEAD><TITLE>Interest Rate in JavaScript result</TITLE>\n");
+
+	w.document.writeln ("</HEAD>");
+	w.document.writeln ("<PRE>");
+
+//	w.document.write ( newtext );
+	w.document.writeln (n+" monthly payments...");
+	w.document.writeln ("with annual interest rate of "+(a*100)+"% divided monthly...");
+	w.document.writeln ("for a loan of    $"+T+"...");
+	w.document.writeln ("");
+	w.document.writeln ("equal payment  : $"+tx+" per month");
+	w.document.writeln ("");
+	w.document.writeln ("totally payed  : $"+(tx*n));
+
+	var balance = money((t-tx)*n);
+	if (balance != 0.0) {
+	w.document.writeln ("should be payed: $"+(t*n));
+	w.document.writeln ("last balance   : $"+balance);
+	}
+
+	w.document.writeln ("</PRE>");
+	w.document.writeln ("</BODY></HTML>");
+	w.document.close();
+	w.focus();
+}
+
+
+function calculate() {
+	monthly(/*parseInt*/(eval(document.theForm.years.value)),
+		/*parseInt*/(eval(document.theForm.percent.value)),
+		/*parseInt*/(eval(document.theForm.sum.value)));
+}
+
+// End the hiding here. -->
+</SCRIPT>
+
+<TITLE>
+InterestRate in JavaScript
+</TITLE>
+</HEAD>
+
+<BODY>
+<H1>InterestRate in JavaScript</H1>
+<FONT SIZE="-2">Written by Alexey Roytman, 2002</FONT><BR>
+<BR>
+This small utility helps to know what are monthly payments for a loan.<BR>
+<BR>
+
+<FORM ACTION="#" NAME="theForm">
+<TABLE>
+<TR>
+<TD>Number of years to pay monthly payment: 
+<TD><INPUT TYPE=TEXT NAME="years"   MAXLENGTH="10" SIZE="10" VALUE="3">
+<TR>
+<TD>Annual interest rate, percents: 
+<TD><INPUT TYPE=TEXT NAME="percent" MAXLENGTH="10" SIZE="10" VALUE="4.0">
+<TR>
+<TD>Received loan sum: 
+<TD><INPUT TYPE=TEXT NAME="sum"     MAXLENGTH="10" SIZE="10" VALUE="10000.0">
+</TABLE>
+<BR>
+<INPUT TYPE="button" onClick="calculate()" VALUE="Calculate">
+</FORM>
+
+</BODY>
+</HTML>

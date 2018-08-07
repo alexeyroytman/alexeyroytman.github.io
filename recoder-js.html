@@ -1,0 +1,659 @@
+<HTML>
+<HEAD>
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=koi8-r">
+
+<NOSCRIPT>
+<B>This page uses JavaScript.</B><BR>
+</NOSCRIPT>
+
+
+<SCRIPT LANGUAGE="JavaScript">
+<!-- Begin to hide script contents from old browsers.
+
+//
+// Copyright (c) Alexey Roytman, 2002-2004
+// roytman AT cs DOT bgu DOT ac DOT il
+//
+
+//document.theForm.theTextArea.focus();
+
+// For transliteration: the pairs of symbols to disable conversion
+var default_escapers   = "{}<>[]||";
+// For transliteration: the symbols that make letters convert separately
+var default_separators = "#~";
+
+var escapers   = default_escapers;
+var separators = default_separators;
+var rules = null;		// user defined rules
+var maxRuleLeftLength = 4;	// maximal length of left part of rules
+
+function displayControls() {
+	var w = window.open("","ReCoderControls",
+			"toolbar=no,location=no,directories=no,menubar=yes,scrollbars=yes,width=400,height=200");
+	w.document.open();
+	w.document.writeln ("<HTML><HEAD><TITLE>ReCoder in JavaScript controls</TITLE>\n");
+	w.document.writeln ("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=koi8-r\">");
+	w.document.writeln ("</HEAD>");
+	w.document.writeln ("Separators: <PRE>"+separators+"</PRE>");
+	w.document.writeln ("Escapers: <PRE>"+escapers+"</PRE>");
+	w.document.writeln ("<TABLE BORDER=\"1\">");
+	w.document.writeln ("<TR><TH>from<TH>to");
+	var t = getE2Ktable();
+	for (i=0;i<t.length;i++) {
+		w.document.write("<TR><TD>"+t[i].first+"<TD>"+t[i].second+"\n");
+	}
+	delete t; t = null;
+	w.document.writeln ("</TABLE>");
+	w.document.writeln ("</BODY></HTML>");
+	w.document.close();
+	w.focus();
+}
+
+/*
+function infoAbout(x,indents) {
+	if (x == null)	return "";
+
+	var s="";
+	var p;
+
+	for (p in x) {
+		s += " " + p + " = " + x[p] + "\n";
+		//s += infoAbout(x[p],indents + " ");
+	}
+	return s;
+}
+*/
+
+function changeControls(n) {
+	if (n == 0) {
+		document.theForm.escapers.value   = default_escapers;
+		document.theForm.separators.value = default_separators;
+	}
+	else {
+		// analyze separators and escapers
+		separators = document.theForm.separators.value;
+		if (document.theForm.escapers.value.length % 2 != 0)	// must be even
+			document.theForm.escapers.value = default_escapers;
+		escapers   = document.theForm.escapers.value;
+
+		// parse user defined rules
+		if (rules != null) delete rules; rules = null;
+		var commaSplitted = document.theForm.rules.value.split(",")
+		var i;
+		if (commaSplitted.length && rules == null)
+			rules = new Array();
+		for(i=0;i<commaSplitted.length;i++) {
+			var pair = commaSplitted[i].split("=");
+			rules[rules.length] = new Pair(pair[0],pair[1]);
+			delete pair; pair = null;
+		}
+		delete commaSplitted; commaSplitted = null;
+//		displayRules();
+	}
+}
+
+var Tbl_GOST_alt=	" ─│┌┐└┘├┤┬┴┼▀▄█▌▐░▒▓⌠■∙√≈≤≥ ⌡°²·÷═║╒ё╓╔╕╖╗╘╙╚╛╜╝╞╟╠╡Ё╢╣╤╥╦╧╨╩╪╫╬©юабцдефгхийклмнопярстужвьызшэщчъЮАБЦДЕФГХИЙКЛМНОПЯРСТУЖВЬЫЗШЭЩЧЪ";
+var Tbl_GOST_main=	" ╟╠╡Ё╢╣╤╥╦╧╨╩╪╫╬©юабцдефгхийклмнопярстужвьызшэщчъ⌡°²╔╖┐└┘├≈∙▒▓▀▄║ё╗╕╘╓╙█▌⌠░≤√≥■ ─│┌┤┬┴┼▐·÷╒═╚╛╜╝╞ЮАБЦДЕФГХИЙКЛМНОПЯРСТУЖВЬЫЗШЭЩЧЪ";
+var Tbl_MIC=		" ─│┌┐└┘├┤┬┴┼▀▄█▌▐░▒▓⌠■∙√≈≤≥ ⌡°²·÷═║╒ё╓╔╕╖╗╘╙╚╛╜╝╞пярст????фгвь??оюабцде??хийклмн??????????ызшэщчъ╟╠╡Ё╢╣╤╥╦╧╨╩╪╫╬©ПЯРСТУЖВЬЫЗШужЧЪ";
+var Tbl_KOI8=		" АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмноп░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀рстуфхцчшщъыьэюяЁё≥≤⌠⌡÷≈°∙·√©²■ ";
+var Tbl_BESTA=          " абвгдежзийклмнопрстуфхцчшщъыьэюяАБВГДЕЖЗИЙКЛМНОП░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀РСТУФХЦЧШЩЪЫЬЭЮЯёЁ≤≥⌠⌡÷≈°∙·√©²■ ";
+var Tbl_CP1251=		" юабцдефгхийклмнопярстужвьызшэщчъЮАБЦДЕФГХИЙКЛМНО                                                ПЯРСТУЖВЬЫЗШЭЩЧЪ╗╦              ";
+var Tbl_ISO8859_5=	" ╟╠╡Ё╢╣╤╥╦╧╨╩╪╫╬©юабцдефгхийклмнопярстужвьызшэщчъ                                                ЮАБЦДЕФГХИЙКЛМНО║Я              ";
+var Tbl_KOI7=		" abwgdevzijklmnoprstufhc~{}\"yx|`qABWGDEVZIJKLMNOP                                                RSTUFHC^[]_YX\\@Q$#              ";
+var Tbl_KOI7_inv=	" ABWGDEVZIJKLMNOPRSTUFHC^[]_YX\\@Qabwgdevzijklmnop                                                rstufhc~{}\"yx|`q#$              ";
+var Tbl_Macintosh=	" ─│┌┐└┘├┤┬┴┼▀▄█▌▐░▒▓⌠■∙√≈≤≥ ⌡°²·÷╟╠╡Ё╢╣╤╥╦╧╨╩╪╫╬©юабцдефгхийклмнопярстужвьызшэщчъПЯРСТУЖВЬЫЗШЭЩЧЪ═║╒ё╓╔╕╖╗╘╙╚╛╜╝╞ЮАБЦДЕФГХИЙКЛМНО";
+
+// convert a letter to case(0=lower,1=upper) when encoded in KOI8 encoding
+function k2case(c,up) {
+
+	var U = "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯЁ";
+	var L = "абвгдежзийклмнопрстуфхцчшщъыьэюяё";
+
+	var ind;
+	if (up) {
+		ind = L.indexOf(c);
+		if (ind != -1)	c = U.charAt(ind);
+	}
+	else {
+		ind = U.indexOf(c);
+		if (ind != -1)	c = L.charAt(ind);
+	}
+
+	return c;
+}
+
+// is a letter an upper case one when encoded by English transliteration encoding
+function eisupper(s) {
+	var pos = 0;
+	if (s.charAt(pos) == "\\")	pos++;
+	var c = s.substring(pos,pos+1);
+	if (c == c.toLowerCase())	return 0;
+	else					return 1;
+}
+
+// constructor for pair
+function Pair(a,b) {
+	this.first  = a;
+	this.second = b;
+}
+
+// returns a transliteration <--> KOI8 encoding table
+function getE2Ktable() {
+	var n = new Array();
+
+	for (i=0;rules != null && i<rules.length;i++)
+		n[n.length] = rules[i];
+
+//	n[n.length] = new Pair(" \"",		" &laquo;");
+//	n[n.length] = new Pair("\" ",		"&raquo;");
+//	n[n.length] = new Pair(" -- ",		"&nbsp;&mdash; ");
+
+	n[n.length] = new Pair("\\e",		"э");
+	n[n.length] = new Pair("\\",		"\\");
+	n[n.length] = new Pair("''",		"Ь");
+	n[n.length] = new Pair("'",		"ь");
+	n[n.length] = new Pair("``",		"Ъ");
+	n[n.length] = new Pair("`",		"ъ");
+	n[n.length] = new Pair("a",		"а");
+	n[n.length] = new Pair("b",		"б");
+	n[n.length] = new Pair("ch",		"ч");
+	n[n.length] = new Pair("c",		"ц");
+	n[n.length] = new Pair("d",		"д");
+//	n[n.length] = new Pair("eh",		"э");	back and forth of "eh-ma!"
+	n[n.length] = new Pair("e",		"е");
+	n[n.length] = new Pair("f",		"ф");
+	n[n.length] = new Pair("g",		"г");
+	n[n.length] = new Pair("x",		"х");	// back & forth conversion for "sx"
+	n[n.length] = new Pair("h",		"х");
+	n[n.length] = new Pair("i",		"и");
+	n[n.length] = new Pair("ja",		"я");
+	n[n.length] = new Pair("je",		"е");
+	n[n.length] = new Pair("jo",		"ё");
+	n[n.length] = new Pair("ju",		"ю");
+	n[n.length] = new Pair("jj",		"й");
+	n[n.length] = new Pair("j",		"й");
+	n[n.length] = new Pair("kh",		"х");
+	n[n.length] = new Pair("k",		"к");
+	n[n.length] = new Pair("l",		"л");
+	n[n.length] = new Pair("m",		"м");
+	n[n.length] = new Pair("n",		"н");
+	n[n.length] = new Pair("o",		"о");
+	n[n.length] = new Pair("ph",		"ф");
+	n[n.length] = new Pair("p",		"п");
+	n[n.length] = new Pair("q",		"я");
+	n[n.length] = new Pair("r",		"р");
+	n[n.length] = new Pair("shch",	"щ");
+	n[n.length] = new Pair("shh",		"щ");
+	n[n.length] = new Pair("sh",		"ш");
+	n[n.length] = new Pair("s",		"с");
+	n[n.length] = new Pair("t",		"т");
+	n[n.length] = new Pair("u",		"у");
+	n[n.length] = new Pair("v",		"в");
+	n[n.length] = new Pair("w",		"у");
+	n[n.length] = new Pair("x",		"х");
+	n[n.length] = new Pair("ya",		"я");
+//	n[n.length] = new Pair("ye",		"е");	// "chastye" ?
+	n[n.length] = new Pair("yo",		"ё");
+//	n[n.length] = new Pair("yu",		"ю");	// "vyuzhivat'" ?
+	n[n.length] = new Pair("y",		"ы");
+	n[n.length] = new Pair("zh",		"ж");
+	n[n.length] = new Pair("z",		"з");
+
+	maxRuleLeftLength = 0;
+	for (p in n)
+		if (maxRuleLeftLength < n[p].first.length)
+			maxRuleLeftLength = n[p].first.length;
+
+	return n;
+}
+
+function getE2Khash() {
+	var n = getE2Ktable();
+	var h = new Array();
+
+	var i;
+	for (i=0;i<n.length;i++)
+		if (h[ n[i].first ] == null)
+			h[ n[i].first ] = n[i].second;
+
+	delete n; n = null;
+	return h;
+}
+
+function getK2Ehash() {
+	var n = getE2Ktable();
+	var h = new Array();
+
+	var i;
+	for (i=0;i<n.length;i++)
+		if (h[ n[i].second ] == null)
+			h[ n[i].second ] = n[i].first;
+
+	delete n; n = null;
+	return h;
+}
+
+function getU2Whash() {
+	var h = new Array();
+
+	h[0x0401] = 0xA8;
+	h[0x0451] = 0xB8;
+
+	var i;
+	for (i=0;i<64;i++)
+		h[0x0410 + i] = 0xC0 + i;
+
+	return h;
+}
+
+// convert a string from transliteration into KOI8 encoding
+function e2k(s) {
+
+	var h = getE2Khash();
+
+	var convertIndex = -1;	// index of previous conversion symbol
+
+	var t = "";
+	var i;
+
+	// For start position up to end of the test, do...
+	for(i=0;i<s.length;) {
+
+		var c = s.substring(i,i+1);
+		var es = escapers.indexOf(c);
+		if (es != -1)	// escape symbol found
+		{
+			if (convertIndex == -1)	// start sequence
+			{
+				convertIndex = es;
+				i++;
+				continue;
+			}
+			else if (es - convertIndex == 1)	// end sequence
+			{
+				convertIndex = -1;
+				i++;
+				continue;
+			}
+			else if (	
+				es - convertIndex == 0 &&
+				escapers.substring(convertIndex,convertIndex+1) ==	// same symbol
+				escapers.substring(convertIndex+1,convertIndex+2))
+			{
+				convertIndex = -1;
+				i++;
+				continue;
+			}
+		}
+
+		if (convertIndex != -1)	// inside escaping sequence
+		{
+			t += c;
+			i++;
+			continue;
+		}
+
+		var maxlen = maxRuleLeftLength;
+		if (maxlen >= s.length - i)	maxlen = s.length - i;
+
+		var len;
+		for (len=maxlen;len>0;len--) {
+			var c  = s.substring(i,i+len);
+			var cl = c.toLowerCase();
+
+			if (len == 1 && separators.indexOf(c) != -1) { 
+				i++;
+				break;
+			}
+
+			if (h[cl] != null
+			    && h[cl].toString().indexOf("native code") == -1	// bugfix for MS Internet Explorer
+			    ) {
+
+				if (eisupper(c))	t += k2case(h[cl],1);
+				else			t += h[cl];
+				i += len;
+				break;
+			}
+		}
+		if (len==0) {
+			var c = s.substring(i,i+1);
+
+			t += c;
+			i += 1;
+		}
+	}
+
+	delete h; h = null;
+	return t;
+}
+
+// convert a string from KOI8 encoding into transliteration
+function k2e(s) {
+
+	var h = getK2Ehash();
+
+	var t = "";
+	var i;
+
+	for(i=0;i<s.length;i++) {
+
+		var c = s.charAt(i);
+		var cl = k2case(c,0);
+
+		if (h[cl] != null) {
+			if (c == cl)	t += h[cl];
+			else			t += h[cl].toUpperCase();
+		}
+		else			t += c;
+	}
+
+	delete h; h = null;
+	return t;
+}
+
+// converts a string to its codes (html dump)
+function txt2html(s) {
+	var t = "";
+	var i;
+	for(i=0;i<s.length;i++) {
+
+		var c = s.charAt(i);
+		var cl = s.charCodeAt(i);
+
+		if      (c == '\n')	cl = '<BR>\n';
+		else if (c == '\r')	cl = "";
+		else if (c == '<')	cl = '&lt;';
+		else if (c == '>')	cl = '&gt;';
+		else if (c == '&')	cl = '&amp;';
+		else if (cl < 256)	cl = c;
+		else				cl = "&#"+cl+";";
+
+		t += cl;
+	}
+
+	return t;
+}
+
+// converts a string to its codes (dump)
+// trial examples for 3 back-and-forth conversions:
+// 1.	&lt;<BR>&gt;<BR>&amp;<BR>
+// 2.	x<BR>y<BR>z<BR>
+// 3.	&#1055;
+// 4.	start.<BR>&#1055;&#1088;&#1080;&#1074;&#1077;&#1090;!&lt;Hello!&gt;<BR>end.<BR>
+function html2txt(s) {
+	var t = "";
+	var i;
+	for(i=0;i<s.length;i++) {
+
+		var c = s.charAt(i);
+
+		if (c == '\r')	i++;
+		if (c == '\n')	i++;
+		else if (s.substring(i,i+5).toLowerCase() == '<br>\n')	{ i+=5-1; c='\n'; }
+		else if (s.substring(i,i+5).toLowerCase() == '\n<br>')	{ i+=5-1; c='\n'; }
+		else if (s.substring(i,i+4).toLowerCase() == '<br>')	{ i+=4-1; c='\n'; }
+		else if (s.substring(i,i+4).toLowerCase() == '&lt;')	{ i+=4-1; c='<'; }
+		else if (s.substring(i,i+4).toLowerCase() == '&gt;')	{ i+=4-1; c='>'; }
+		else if (s.substring(i,i+5).toLowerCase() == '&amp;')	{ i+=5-1; c='&'; }
+		else if (s.substring(i,i+2) == '&#' && s.charAt(i+6) == ';') {
+			var n = parseInt(s.substring(i+2,i+6));
+			c = String.fromCharCode(n);
+			i+=7-1;
+//			c = "("+n+")";
+		}
+
+		t += c;
+	}
+
+	return t;
+}
+
+// does a tr(1) of string using 2 conversion strings
+function recodeString(s, from, to) {
+
+	if (from == "translit")		// special
+		return recodeString(e2k(s),Tbl_KOI8,to);
+	if (to   == "translit")		// special
+		return k2e(recodeString(s,from,Tbl_KOI8));
+
+	if (to   == "html" && from != to)
+		return txt2html(s);
+	if (from == "html")
+		return recodeString(html2txt(s),Tbl_KOI8,to);
+
+	var t = "";
+	var i;
+	var c;
+	for (i=0;i<s.length;i++) {
+
+		c = s.charAt(i);
+
+		if (c != " " && c != "\n" && c != "\r")	{
+			var ind = from.indexOf(c);
+			if (ind != -1)	{
+				c = to.charAt(ind);
+			}
+		}
+
+		t += c;
+	}
+	return t;
+}
+
+// returns a value of given selector
+function selectedValue(x) {
+	return x[x.selectedIndex].value;
+}
+
+function selectedTable(x) {
+	var c = x[x.selectedIndex].value;
+	if      (c == "translit")	return c;	// special encoding, not tr(1) table
+	else if (c == "alt")		return Tbl_GOST_alt;
+	else if (c == "koi8")		return Tbl_KOI8;
+	else if (c == "win")		return Tbl_CP1251;
+	else if (c == "besta")		return Tbl_BESTA;
+	else if (c == "iso")		return Tbl_ISO8859_5;
+	else if (c == "koi7")		return Tbl_KOI7;
+	else if (c == "koi7i")		return Tbl_KOI7_inv;
+	else if (c == "html")		return c;	// special encoding, not tr(1) table
+
+	alert("Wrong selection encoding: '"+c+"'");
+	return null;
+}
+
+function selectedEncodingToCharset() {
+	var c    = selectedValue(document.theForm.encodingTo);
+
+	if      (c == "translit")	return null;
+	else if (c == "alt")		return null;
+	else if (c == "koi8")		return "koi8-r";
+	else if (c == "win")		return "windows-1251";
+	else if (c == "besta")		return "koi8-r";
+	else if (c == "iso")		return "iso-8859-5";
+	else if (c == "koi7")		return null;
+	else if (c == "koi7i")		return null;
+	else if (c == "html")		return null;
+}
+
+function recodeTA(ta,z) {
+
+	var from  = selectedTable(document.theForm.encodingFrom);
+	var to    = selectedTable(document.theForm.encodingTo);
+	var where = selectedValue(document.theForm.where);
+
+	var newtext = "";
+
+	if      (z == 0)	newtext = recodeString(ta.value,from,to);
+	else if (z == 1)	newtext = recodeString(ta.value,to,from);
+
+	if (where == "in")	ta.value = newtext;
+	else {
+		w = window.open("","ReCoderResult",
+				"toolbar=no,location=no,directories=no,menubar=yes,scrollbars=yes,width=400,height=200");
+		w.document.open();
+		w.document.writeln ("<HTML><HEAD><TITLE>ReCoder in JavaScript result</TITLE>\n");
+
+		var c = selectedEncodingToCharset();
+		if (c != null && c != "")
+			w.document.writeln ("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset="+c+"\">");
+		w.document.writeln ("</HEAD>");
+		w.document.writeln ("<PRE>");
+		w.document.write ( newtext );
+		w.document.writeln ("</PRE>");
+		w.document.writeln ("</BODY></HTML>");
+		w.document.close();
+		w.focus();
+	}
+
+} // recodeTA
+
+function clearTextArea() {
+	document.theForm.theTextarea.value = "";
+}
+
+
+function setTextArea() {
+	document.theForm.theTextarea.value +=
+"\n"+
+"Strochnye bukvy:\n"+
+" a b v g d e/je jo/yo zh \n"+
+" z i j/jj k l m n o \n"+
+" p r s t u f x/h/kh c \n"+
+" ch sh shch/shh ` y ' \\e ju q/ja/ya \n"+
+"Osobye propisnye bukvy:\n"+
+" `` '' \n"+
+"Obychnye propisnye bukvy\n"+
+" A B V ... Jo/JO/Yo/YO ... \\E JU/Ju Q/Ja/JA/Ya/YA \n";
+}
+
+// End the hiding here. -->
+</SCRIPT>
+
+<TITLE>
+ReCoder in JavaScript
+</TITLE>
+</HEAD>
+
+<BODY>
+<H1>ReCoder in JavaScript</H1>
+<FONT SIZE="-2">Written by Alexey Roytman, 2002.
+                Modified on January 24, 2004</FONT><BR>
+This small utility recodes Cyrillic text from one encoding to another.<BR>
+For instructions and description see below the input areas.<BR>
+
+<FORM ACTION="#" NAME="theForm">
+
+<INPUT TYPE="button" onClick="clearTextArea()"   VALUE="Clear text area">
+<INPUT TYPE="button" onClick="setTextArea()"     VALUE="Add alphabet to text area">
+<BR>
+<TEXTAREA NAME="theTextarea" COLS=72 ROWS=15>
+{Write here... Any Text You Want...}
+
+Privet (Transliteraciq)
+Привет (КОИ-8)  - koi8
+оПХБЕР (сХМДНСЯ) - cp1251
+
+Odnazhdy v studjonuju zimnjuju poru
+Q iz lesu vyshel -- byl sil'nyj moroz.
+Glyazhu -- podnimaetsq medlenno v goru
+Loshadka, vezushchaq xvorostu voz.
+</TEXTAREA>
+<BR>
+
+<SELECT NAME="where" SIZE=1 LANG="iso8859-5" DIR=ltr>Where do the output
+<OPTION SELECTED VALUE="in"  LANG="...">Inside text area</OPTION>
+<OPTION          VALUE="out" LANG="...">In new window   </OPTION>
+</SELECT>
+
+<BR>
+
+<SELECT NAME="encodingFrom" SIZE=1 LANG="iso8859-5" DIR=ltr>Encoding
+<OPTION SELECTED VALUE="translit" LANG="...">Transliteration </OPTION>
+<OPTION          VALUE="alt"      LANG="...">GOST Alternative</OPTION>
+<OPTION          VALUE="koi8"     LANG="...">KOI-8           </OPTION>
+<OPTION          VALUE="win"      LANG="...">Windows CP-1251 </OPTION>
+<OPTION          VALUE="besta"    LANG="...">Besta           </OPTION>
+<OPTION          VALUE="iso"      LANG="...">ISO-8859-5      </OPTION>
+<OPTION          VALUE="koi7"     LANG="...">KOI-7           </OPTION>
+<OPTION          VALUE="koi7i"    LANG="...">KOI-7 inverted  </OPTION>
+<OPTION          VALUE="html"     LANG="...">HTML            </OPTION>
+</SELECT>
+
+<INPUT TYPE="button" onClick="recodeTA(document.theForm.theTextarea,0)" VALUE="--&gt;">
+<INPUT TYPE="button" onClick="recodeTA(document.theForm.theTextarea,1)" VALUE="&lt;--">
+
+<SELECT NAME="encodingTo"   SIZE=1 LANG="iso8859-5" DIR=ltr>Encoding
+<OPTION          VALUE="translit" LANG="...">Transliteration </OPTION>
+<OPTION          VALUE="alt"      LANG="...">GOST Alternative</OPTION>
+<OPTION SELECTED VALUE="koi8"     LANG="...">KOI-8           </OPTION>
+<OPTION          VALUE="win"      LANG="...">Windows CP-1251 </OPTION>
+<OPTION          VALUE="besta"    LANG="...">Besta           </OPTION>
+<OPTION          VALUE="iso"      LANG="...">ISO-8859-5      </OPTION>
+<OPTION          VALUE="koi7"     LANG="...">KOI-7           </OPTION>
+<OPTION          VALUE="koi7i"    LANG="...">KOI-7 inverted  </OPTION>
+<OPTION          VALUE="html"     LANG="...">HTML            </OPTION>
+</SELECT><BR>
+<!--
+<INPUT TYPE="submit"><BR>
+-->
+<BR>
+
+<INPUT TYPE="button" onClick="changeControls(0)" VALUE="Set default separators and escapers">
+<BR>
+<INPUT TYPE="text" NAME="separators" onChange="changeControls(1)" onInit="changeControls(0)">
+- separators<BR>
+<INPUT TYPE="text" NAME="escapers"   onChange="changeControls(1)" onInit="changeControls(0)">
+- escapers<BR>
+<INPUT TYPE="text" NAME="rules"      onChange="changeControls(1)" onInit="changeControls(0)">
+- user defined rules<BR>
+<INPUT TYPE="button" onClick="displayControls()" VALUE="Show rules"><BR>
+<BR>
+
+</FORM>
+<HR>
+
+<BR>
+<BR>
+It can either recode the text from the text area you printed it in 
+(thus replacing the original text), or in a newly opened window 
+(thus leaving the original text without changes).
+<BR>
+When you convert from and to Transliteration back and forth (for example, when fixing 
+typographical mistakes), it's recommended to convert into new window, because 
+such conversions are typically irreversible (because of escaping and separating rules).
+<BR>
+When converting from Transliteration to Cyrillic, 
+the "separators" make characters to be separate 
+(when otherwise they will be joined by some rules). The "escapers" are pairs of symbols
+that symbolic sequence between them is not converted. 
+There may be multiple "separators".
+There may be multiple "escapers" (each pair may escape another pair), and the 
+opening/closing symbols may be either different or same.
+<BR>
+Useful "separators" string: #~<BR>
+Useful "escapers" string (pairs): {}&lt;&gt;[]||<BR>
+Example for user defined rules: tv=телевизор,mgr=manager,j=ж,yu=ю<BR>
+<BR>
+<HR>
+Test example:
+<PRE>
+Trap (*ne* anglijskoe [<]trap[>], <`>lovushka<'>) 
+est' ljogkie korabel'nye s#hodni (ot slova <`>sxodit'<'>).
+
+Vz`elsya - ot slova |`|est'|'| s pristavkoj |`|vz|'|, 
+oznachajushchej neozhidannost', vnezapnost' (sr. [`]vzvilsq[']).
+
+Vypolnqjutsq sledujushchie usloviq (dlq veshchestvennogo |z|):
+     [#]1. [|z|] [>] 1 =|>| [z*z] |>| <|>[z]<|>
+     |#|2. <sin>(|z|) -- veshchestvenno
+     <#>3. -1 [<=] [sin](<z>) |<=| +1
+     [#4]. |z| |>| 1 |=>| [z*z] [>] [|z|]
+     <#5>. <z> [>] 0 [=>] <[>|z]| |<=| <z>
+I \eto ochevidno.
+
+Slavnyj gorod N'ju-JJork v shtate N'ju-J#ork.
+</PRE>
+</BODY>
+</HTML>

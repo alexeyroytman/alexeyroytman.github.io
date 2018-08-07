@@ -1,0 +1,311 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<title>Curriculum vitae (résumé) of Alexey Roytman</title>
+</head><body>
+<h1 align="center">Alexey Roytman</h1>
+<h2 align="center">Software developer<!--/engineer--></h2>
+
+Home town: Beer-Sheva, Israel<br>
+Phone: +972-52-8746139 (mobile)<br>
+E-mail:	<img src="email.gif" style="vertical-align: middle;" title="sorry for image; antispam measure" alt="email"><br>
+LinkedIn: <a href="http://il.linkedin.com/in/alexeyroytman">
+http://il.linkedin.com/in/alexeyroytman</a><br>
+
+
+<br>
+
+<h2>Key skills</h2>
+<ul>
+<li>C++ (C++03) and STL, C</li>
+<li>Scalable multithreaded and multiprocessor algorithms and software design</li>
+<li>Performance analysis</li>
+<li>Crash dump analysis</li>
+<li>TCP/IPv4</li>
+<li>Bourne shell scripting (including <code>awk</code>) and automation</li>
+<li>Tuning compilers, dynamic linkers, optimizers</li>
+<li>Parsers (<code>bison/yacc</code> with <code>flex/lex</code>)</li>
+<li>UNIX family and Linux operation systems: maintenance and programming</li>
+<!--
+<li>No fear about <code>vi/vim</code>.
+	If IE is stuck second time a day, I run WinDbg.
+	If I don't understand <code>man</code> page or have questions on
+	implementation, I download Linux kernel source code, or glibc source code
+	and look into it.
+	If I spend more than 1 hour on investigations, I share notes.
+	I've pushed ProcMon tool to wide usage both by developers and support engineers;
+	now they know exactly what fails.
+	I widely use library interposers for investigations/debugging on Linux/Solaris
+	(using <code>LD_PRELOAD</code>).</li>
+-->
+</ul>
+
+<h2>Education</h2>
+<dl>
+<dt>1995-1998
+</dt><dd>
+B.Sc. in <a href="http://www.cs.bgu.ac.il/">
+Math. &amp; Computer Science Dept.</a>
+of
+<a href="http://www.bgu.ac.il/">Ben-Gurion University of the Negev</a>,
+Israel.
+</dd></dl>
+
+<h2>Work experience</h2>
+<dl>
+<dt>01/2016&nbsp;&#8212; present <!-- Does "until now" sound ugly ? -->
+</dt><dd>
+	<a href="http://www.oracle.com/">Oracle</a>&nbsp;&#8212;
+	Consulting Software Developer (IC5),
+	BI&nbsp;&amp;&nbsp;EPM Development.<br>
+	Query Processing team in
+	<a href="http://www.oracle.com/us/solutions/business-analytics/business-intelligence/essbase/index.html">Essbase</a> Server development.
+	<ul type="circle">
+	<li>C/C++.</li>
+	<li>MDX and additional reporting ways, bugs fixing.</li>
+	<li>Performance analysis and bugs.</li>
+	</ul>
+<br>
+<dt>07/2012&nbsp;&#8212; 12/2015
+</dt><dd>
+	<a href="http://www.oracle.com/">Oracle</a>&nbsp;&#8212;
+	Principal Software Developer (IC4),
+	BI&nbsp;&amp;&nbsp;EPM Development.<br>
+	Query Processing team in
+	<a href="http://www.oracle.com/us/solutions/business-analytics/business-intelligence/essbase/index.html">Essbase</a> Server development.
+	Essbase is a multi-dimensional database that summarizes/aggregates/calculates large volumes of data quickly, a.k.a. OLAP server.
+	It is used for sales data analysis, planning/budgeting, general ledger and business analytics/business intelligence.
+	<ul type="circle">
+	<li>C/C++.</li>
+	<li>MDX and additional reporting ways, legacy code maintenance, bugs fixing.</li>
+	<li>On 03/2014 our team released the first version of <b>Essbase
+		<a href="http://docs.oracle.com/cd/E57185_01/epm.1112/essbase_tech_ref/frameset.htm?asodynamicagginbso.html">Hybrid Aggregation</a></b> feature
+		that was valued highly by the users' community.
+	<li>From 03/2012 to 03/2013 I've created
+		a <b>new design of a data fetching module in query processing
+		for high performance and scalability, and successfully implemented it</b> in C++.
+		Given a number of heavy pure aggregating queries,
+		I observed run time improvement by factors from x5 to x40.</li>
+	<li>During that phase, I've initiated a true <b>Unit Testing</b> using
+		<code><a href="http://code.google.com/p/googlemock/">gmock</a>/<a href="http://code.google.com/p/googletest/">gtest</a></code></b>
+		framework for the team.</li>
+	<li>General performance cases of Essbase.
+		CPU cache behavior. SMP and NUMA architecture.
+		Contention, multithreading, multiprocessing.
+		Some performance cases of Essbase for
+		<a href="http://www.oracle.com/us/solutions/ent-performance-bi/business-intelligence/exalytics-bi-machine/overview/index.html">Exalytics</a>.
+		I/O bounded.</li>
+	<li>Performance analysis
+		(including non-instrumenting tools:
+		 <a href="http://developer.amd.com/tools-and-sdks/heterogeneous-computing/amd-codeanalyst-performance-analyzer/">AMD CodeAnalyst</a>,
+		 <a href="http://www.codersnotes.com/sleepy">Very Sleepy</a>,
+		 <code><a href="http://en.wikipedia.org/wiki/Oprofile">oprofile</a></code>,
+		 <code><a href="http://en.wikipedia.org/wiki/Perf_%28Linux%29">perf</a></code>;
+		 and instrumenting tools: Rational Quantify, <code>gprof/prof</code>).</li>
+	<li>Rational Purify and
+		<a href="http://www.valgrind.org/info/tools.html">Valgrind Memcheck</a> validations.</li>
+	<li>Rational PureCoverage and <code>gcc+gcov</code> code coverage.</li>
+	<li>Customers' escalation fixes (mostly related to race conditions in legacy code).
+		Crash analysis (mostly on Linux x86/x64).</li>
+	<li>Some continuous integration/build tasks (Hudson CI) and efforts (<!--ADE, -->OPack/OPatch).</li>
+	<!--<li>Consulting QA team in wide range of questions.</li>-->
+	<li>From 05-2013 to 06/2013 as a low-priority initiative
+		I've <b>tweaked ClearCase 7.1.2 MVFS Linux kernel module source code</b>
+		to be able run on unsupported kernel (Oracle Unbreakable Enterprise Kernel, UEK v2).
+		This gives a push to Oracle Linux 6 as a development environment for our team.</li>
+	<li>On 09-2014 as a continuation of MVFS initiative
+		I've <b>tweaked ClearCase 8.0.1 MVFS Linux kernel module source code</b>
+		to be able run on unsupported kernel (Oracle Unbreakable Enterprise Kernel, UEK v3).
+		This gives a push to Oracle Linux 7 as a development environment for our team.</li>
+		(<a href="http://www.openhub.net/p/perfbook/commits?query=roytman">changes</a>)
+	<li>In 2014 I've <a href="http://paulmck.livejournal.com/36370.html">contributed</a>
+		to the <a href="https://www.kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook.html">Is Parallel Programming Hard, And, If So, What Can You Do About It?</a>
+		book by <a href="http://www.rdrop.com/users/paulmck">Paul E. McKenney</a>.
+		It focuses on concurrency/scalability and <a href="http://en.wikipedia.org/wiki/Read-copy-update">RCU</a>.
+
+<!--
+	<li> A team of about 10 developer have a development environment setup scripts based on mine.</li>
+-->
+	</ul>
+<br>
+<dt>06/2010&nbsp;&#8212; 06/2012
+</dt><dd>
+	<a href="http://www.oracle.com/">Oracle</a>&nbsp;&#8212;
+	Principal Software Developer (IC4),
+	BI&nbsp;&amp;&nbsp;EPM Development.<br>
+	First two years in
+	<a href="http://www.oracle.com/us/solutions/ent-performance-bi/analytics-link-065903.html">Essbase Analytics Link</a>
+	(<a href="https://blogs.oracle.com/eal/">EAL</a>) development team.
+	<ul type="circle">
+	<li>C/C++ application level protocols (compatibility,
+		scalability and performance) over TCP/IPv4.</li>
+	<li>During less than a year I've <b>implemented from scratch Essbase partitioning protocol</b> module in C++.</li>
+	<li>In less than a half year I've <b>designed and implemented SSL support</b> for the product.</li>
+	<li>J2EE programming in Eclipse IDE for
+		Weblogic 11g and Tomcat 6. Web services.
+		JAX WS and JAX RPC.
+		Dependencies, deployment and packaging.</li>
+	<li>Porting to Windows x86/x64,
+		UNIX (AIX 5L, Solaris SPARC/x86,
+		HP-UX 11i PA-RISC), Linux (x86/x64).</li>
+	<li>Security Person of Contact of a new product.
+		Oracle Software Security Assurance process.
+		Reports for security-dedicated Project Management team for release management.
+		Architecture/design review, security checklists,
+		Fortify static code analysis, 3rd-party components
+		management (scanning and licensing).</li>
+	</ul>
+<br>
+</dd><dt>03/2000&nbsp;&#8212; 05/2010 (until LEC with Oracle after
+<a href="http://www.oracle.com/us/corporate/acquisitions/hyperroll/index.html">acquisition</a>)
+</dt><dd>
+	<a href="http://www.oracle.com/us/corporate/acquisitions/hyperroll/index.html">HyperRoll</a>&nbsp;&#8212;
+	software engineer and system integrator.<br>
+	During last year, I've <b>leaded the design and the successful implementation of a new storage subsystem for our product</b>.<br>
+	Daily tasks include:
+	<ul type="circle">
+	<li>Package builds (i.e. releases) generation and primary
+		automated testing before passing builds to testing team.</li>
+	<li>Keeping the portability and source code porting
+		to all supported platforms 
+		(AIX, Solaris, HP-UX, Windows on x86/x64/IA64<!-- Itanium, IPF -->,
+		Linux, Tru64)
+		using common conformance standards relevant to
+		a specific OS (POSIX.1, POSIX.2, XPG4 etc)
+		and appropriate data mode (32-bit and 64-bit).</li>
+	<li>Source code reviews.</li>
+	<li>OS level and infrastructures related
+		source code development and bug fixing.</li>
+	<li>Maintenance of development and testing environment.</li>
+	<li>Supporting developers with build, profiling, coverage
+		and automated validation
+		processes and with OS related problems.</li>
+	<li>Helping Professional Services
+		and Support teams with urgent customers' issues.</li>
+	<li>Supporting old and obsolete product versions.
+	<li>Oracle Express Server (OES) connectivity maintenance.
+	<li>Core (post-mortem crash dump) files' analysis,
+		including source code vs disassembling analysis for
+		x86/x64, SPARC, PA-RISC, Power, Alpha processors.
+	</ul>
+	General tasks (not on daily operation):
+	<ul type="circle">
+	<li>Creation of automated internal development and testing tools
+		(leak detection library, automated regression
+		testing suite).</li>
+	<li>UNIX applications installation and customization of
+		products that include
+		<a href="http://www.ibm.com/software/data/db2/udb/">IBM DB2 UDB</a> 7.2 and 8.1,
+		IBM DB2 OLAP Server 7.x and 8.x,
+		Oracle RDBMS 8i, 9i and 10g,
+		<!--<a href="http://www.oracle.com/technology/documentation/express_server.html">-->
+		Oracle Express Server 6.x
+		<!--</a>-->
+		.</li>
+	<li>UNIX system configuration as for internal usage by
+		development, testing and support teams,
+		and for customers' systems.</li>
+	<li>Regular UNIX system administration related to
+		OS and development tools updating and patching.</li>
+	<li>New OSes installations and configuration for specific team
+		purposes.</li>
+	</ul>
+	Researches with lower activity:
+	<ul type="circle">
+	<li>Build process time decreasing
+		(dead code and modules elimination,
+		<code>#include</code> files dependency minimization).</li>
+	<li> Research on build-time (e.g. compilers) optimizations
+		for application run-time.</li>
+	<li> Research on run-time libraries optimization.
+		Custom run-time functions rewrite (e.g. <code>mem</code>* and <code>str</code>* family)
+		opportunities.</li>
+	</ul>
+<br>
+</dd>
+<dt>02/1998&nbsp;&#8212; 12/1998</dt>
+<dd>
+	CentExchange.com&nbsp;&#8212;
+	e-commerce system programming.<br>
+	UNIX system administration and maintenance.<br>
+	E-commerce web applications for	billing that included web-oriented database
+	creation, administration and 
+	programming using PERL5&nbsp;DBI with SQL&nbsp;RDBMS on UNIX system,
+	JavaScript and C/C++ for UNIX.<br>
+<br>
+</dd>
+<dt>07/1997&nbsp;&#8212; 02/1998</dt>
+<dd>
+	Save-Net Ltd.&nbsp;&#8212;
+	network services.<br>
+	UNIX system administration and maintenance.<br>
+	ISP system maintenance and automation:<br>
+	<ul type="circle">
+	<li>UNIX shell script programming</li>
+	<li>Web-oriented billing system
+	database creation, administration and programming
+	using PERL5&nbsp;DBI with SQL&nbsp;RDBMS on UNIX system.</li>
+	</ul>
+<br>
+</dd>
+<dt>07/1997&nbsp;&#8212; 11/1998</dt>
+<dd>
+	<a href="http://www.cs.bgu.ac.il/faculty/labstaff.html">CS Dept. Lab</a> of
+	<a href="http://cs.bgu.ac.il/">Comp. Sci. Dept of Ben-Gurion University of the Negev</a>
+	staff member.<br>
+	UNIX system administration of large heterogeneous network of the Department.
+	The network was composed of different platforms like:
+	<ul type="circle">
+	<li>SGI workstations and servers with IRIX&nbsp;5.*/6.*</li>
+	<li>SPARC servers with SunOS&nbsp;4 or Solaris&nbsp;2</li>
+	<li>IBM RS/6000 workstations with AIX&nbsp;3.2</li>
+	<li>PC desktops with Linux</li>
+	</ul>
+	These included the following operations as well:
+	<ul type="circle">
+	<li>Massive Linux installations.</li>
+	<li>Upgrading and patching of software (vendors' and third party).</li>
+	<li>UNIX-to-UNIX program porting.</li>
+	</ul>
+	UNIX system security operation:
+	<ul type="circle">
+	<li>Figuring out of system security holes and exploits.</li>
+	<li>Writing security wrappers.</li>
+	<li>Security preventive operations.
+		(<code>Crack,&nbsp;tripwire,&nbsp;SATAN,&nbsp;COPS</code>)
+		including automation using UNIX shell scripts.</li>
+	</ul>
+</dd></dl>
+<!--
+<br>
+-->
+<h2>Additional experience areas</h2>
+<ul>
+<li>Java 6 SE</li>
+<!--
+<li>Java EE</li>
+<li>Python 2.6, Jython
+<li>Oracle Express 4GL</li>
+-->
+<li>Assembly language of different platforms (Intel x86/x64, SPARC v8/v9, PA-RISC, Power, Alpha) at the level of crash/core analysis
+<!--
+<li>JavaScript 1.x</li>
+<li>Scheme and LISP</li>
+<li>Pascal</li>
+<li>VRML 1.0</li>
+<li>Computer hardware: x86/x64, Sun SPARC, IBM pSeries, HP PA-RISC</li>
+-->
+<li>Computer hardware: x86/x64, SPARC</li>
+<li>Business Intelligence (BI), OLAP</li>
+</ul>
+
+<h2>Personal</h2>
+<ul type="square">
+	<li>Languages:	Hebrew, English, Russian (native).</li>
+</ul>
+
+<img src="php/ref.php" alt="">
+
+</body></html>
+
