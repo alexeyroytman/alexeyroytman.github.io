@@ -108,8 +108,8 @@ var Tbl_UTF8=		" \x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1
 // convert a letter to case(0=lower,1=upper) when encoded in KOI8 encoding
 function k2case(c,up) {
 
-	var U = "áâ÷çäåöúéêëìíîïðòóôõæèãþûýÿùøüàñ³";
-	var L = "ÁÂ×ÇÄÅÖÚÉÊËÌÍÎÏÐÒÓÔÕÆÈÃÞÛÝßÙØÜÀÑ£";
+	var U = "\xe1\xe2\xf7\xe7\xe4\xe5\xf6\xfa\xe9\xea\xeb\xec\xed\xee\xef\xf0\xf2\xf3\xf4\xf5\xe6\xe8\xe3\xfe\xfb\xfd\xff\xf9\xf8\xfc\xe0\xf1\xb3";
+	var L = "\xc1\xc2\xd7\xc7\xc4\xc5\xd6\xda\xc9\xca\xcb\xcc\xcd\xce\xcf\xd0\xd2\xd3\xd4\xd5\xc6\xc8\xc3\xde\xdb\xdd\xdf\xd9\xd8\xdc\xc0\xd1\xa3";
 
 	var ind;
 	if (up) {
@@ -150,56 +150,56 @@ function getE2Ktable() {
 //	n[n.length] = new Pair("\" ",		"&raquo;");
 //	n[n.length] = new Pair(" -- ",		"&nbsp;&mdash; ");
 
-	n[n.length] = new Pair("\\e",		"Ü");
+	n[n.length] = new Pair("\\e",		"\xdc");
 	n[n.length] = new Pair("\\",		"\\");
-	n[n.length] = new Pair("''",		"ø");
-	n[n.length] = new Pair("'",		"Ø");
-	n[n.length] = new Pair("``",		"ÿ");
-	n[n.length] = new Pair("`",		"ß");
-	n[n.length] = new Pair("a",		"Á");
-	n[n.length] = new Pair("b",		"Â");
-	n[n.length] = new Pair("ch",		"Þ");
-	n[n.length] = new Pair("c",		"Ã");
-	n[n.length] = new Pair("d",		"Ä");
-//	n[n.length] = new Pair("eh",		"Ü");	back and forth of "eh-ma!"
-	n[n.length] = new Pair("e",		"Å");
-	n[n.length] = new Pair("f",		"Æ");
-	n[n.length] = new Pair("g",		"Ç");
-	n[n.length] = new Pair("x",		"È");	// back & forth conversion for "sx"
-	n[n.length] = new Pair("h",		"È");
-	n[n.length] = new Pair("i",		"É");
-	n[n.length] = new Pair("ja",		"Ñ");
-	n[n.length] = new Pair("je",		"Å");
-	n[n.length] = new Pair("jo",		"£");
-	n[n.length] = new Pair("ju",		"À");
-	n[n.length] = new Pair("jj",		"Ê");
-	n[n.length] = new Pair("j",		"Ê");
-	n[n.length] = new Pair("kh",		"È");
-	n[n.length] = new Pair("k",		"Ë");
-	n[n.length] = new Pair("l",		"Ì");
-	n[n.length] = new Pair("m",		"Í");
-	n[n.length] = new Pair("n",		"Î");
-	n[n.length] = new Pair("o",		"Ï");
-	n[n.length] = new Pair("ph",		"Æ");
-	n[n.length] = new Pair("p",		"Ð");
-	n[n.length] = new Pair("q",		"Ñ");
-	n[n.length] = new Pair("r",		"Ò");
-	n[n.length] = new Pair("shch",	"Ý");
-	n[n.length] = new Pair("shh",		"Ý");
-	n[n.length] = new Pair("sh",		"Û");
-	n[n.length] = new Pair("s",		"Ó");
-	n[n.length] = new Pair("t",		"Ô");
-	n[n.length] = new Pair("u",		"Õ");
-	n[n.length] = new Pair("v",		"×");
-	n[n.length] = new Pair("w",		"Õ");
-	n[n.length] = new Pair("x",		"È");
-	n[n.length] = new Pair("ya",		"Ñ");
-//	n[n.length] = new Pair("ye",		"Å");	// "chastye" ?
-	n[n.length] = new Pair("yo",		"£");
-//	n[n.length] = new Pair("yu",		"À");	// "vyuzhivat'" ?
-	n[n.length] = new Pair("y",		"Ù");
-	n[n.length] = new Pair("zh",		"Ö");
-	n[n.length] = new Pair("z",		"Ú");
+	n[n.length] = new Pair("''",		"\xf8");
+	n[n.length] = new Pair("'",		"\xd8");
+	n[n.length] = new Pair("``",		"\xff");
+	n[n.length] = new Pair("`",		"\xdf");
+	n[n.length] = new Pair("a",		"\xc1");
+	n[n.length] = new Pair("b",		"\xc2");
+	n[n.length] = new Pair("ch",		"\xde");
+	n[n.length] = new Pair("c",		"\xc3");
+	n[n.length] = new Pair("d",		"\xc4");
+//	n[n.length] = new Pair("eh",		"\xdc");	back and forth of "eh-ma!"
+	n[n.length] = new Pair("e",		"\xc5");
+	n[n.length] = new Pair("f",		"\xc6");
+	n[n.length] = new Pair("g",		"\xc7");
+	n[n.length] = new Pair("x",		"\xc8");	// back & forth conversion for "sx"
+	n[n.length] = new Pair("h",		"\xc8");
+	n[n.length] = new Pair("i",		"\xc9");
+	n[n.length] = new Pair("ja",		"\xd1");
+	n[n.length] = new Pair("je",		"\xc5");
+	n[n.length] = new Pair("jo",		"\xa3");
+	n[n.length] = new Pair("ju",		"\xc0");
+	n[n.length] = new Pair("jj",		"\xca");
+	n[n.length] = new Pair("j",		"\xca");
+	n[n.length] = new Pair("kh",		"\xc8");
+	n[n.length] = new Pair("k",		"\xcb");
+	n[n.length] = new Pair("l",		"\xcc");
+	n[n.length] = new Pair("m",		"\xcd");
+	n[n.length] = new Pair("n",		"\xce");
+	n[n.length] = new Pair("o",		"\xcf");
+	n[n.length] = new Pair("ph",		"\xc6");
+	n[n.length] = new Pair("p",		"\xd0");
+	n[n.length] = new Pair("q",		"\xd1");
+	n[n.length] = new Pair("r",		"\xd2");
+	n[n.length] = new Pair("shch",	"\xdd");
+	n[n.length] = new Pair("shh",		"\xdd");
+	n[n.length] = new Pair("sh",		"\xdb");
+	n[n.length] = new Pair("s",		"\xd3");
+	n[n.length] = new Pair("t",		"\xd4");
+	n[n.length] = new Pair("u",		"\xd5");
+	n[n.length] = new Pair("v",		"\xd7");
+	n[n.length] = new Pair("w",		"\xd5");
+	n[n.length] = new Pair("x",		"\xc8");
+	n[n.length] = new Pair("ya",		"\xd1");
+//	n[n.length] = new Pair("ye",		"\xc5");	// "chastye" ?
+	n[n.length] = new Pair("yo",		"\xa3");
+//	n[n.length] = new Pair("yu",		"\xc0");	// "vyuzhivat'" ?
+	n[n.length] = new Pair("y",		"\xd9");
+	n[n.length] = new Pair("zh",		"\xd6");
+	n[n.length] = new Pair("z",		"\xda");
 
 	maxRuleLeftLength = 0;
 	for (p in n)
@@ -564,8 +564,8 @@ For instructions and description see below the input areas.<BR>
 {Write here... Any Text You Want...}
 
 Privet (Transliteraciq)
-ðÒÉ×ÅÔ (ëïé-8)  - koi8
-Ïðèâåò (Óèíäîóñ) - cp1251
+&#xf0;&#xd2;&#xc9;&#xd7;&#xc5;&#xd4; (&#xeb;&#xef;&#xe9;-8)  - koi8
+&#xcf;&#xf0;&#xe8;&#xe2;&#xe5;&#xf2; (&#xd3;&#xe8;&#xed;&#xe4;&#xee;&#xf3;&#xf1;) - cp1251
 
 Odnazhdy v studjonuju zimnjuju poru
 Q iz lesu vyshel -- byl sil'nyj moroz.
@@ -651,7 +651,7 @@ opening/closing symbols may be either different or same.
 <BR>
 Useful "separators" string: #~<BR>
 Useful "escapers" string (pairs): {}&lt;&gt;[]||<BR>
-Example for user defined rules: tv=ÔÅÌÅ×ÉÚÏÒ,mgr=manager,j=Ö,yu=À<BR>
+Example for user defined rules: tv=&#xd4;&#xc5;&#xcc;&#xc5;&#xd7;&#xc9;&#xda;&#xcf;&#xd2;,mgr=manager,j=&#xd6;,yu=&#xc0;<BR>
 <BR>
 <HR>
 Test example:
