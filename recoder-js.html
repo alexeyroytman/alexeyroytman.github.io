@@ -1,7 +1,7 @@
 <HTML>
 <HEAD>
 
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=koi8-r">
 
 <NOSCRIPT>
 <B>This page uses JavaScript.</B><BR>
@@ -33,7 +33,7 @@ function displayControls() {
 			"toolbar=no,location=no,directories=no,menubar=yes,scrollbars=yes,width=400,height=200");
 	w.document.open();
 	w.document.writeln ("<HTML><HEAD><TITLE>ReCoder in JavaScript controls</TITLE>\n");
-	w.document.writeln ("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=UTF-8\">");
+	w.document.writeln ("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=koi8-r\">");
 	w.document.writeln ("</HEAD>");
 	w.document.writeln ("Separators: <PRE>"+separators+"</PRE>");
 	w.document.writeln ("Escapers: <PRE>"+escapers+"</PRE>");
@@ -415,14 +415,14 @@ function html2txt(s) {
 function recodeString(s, from, to) {
 
 	if (from == "translit")		// special
-		return recodeString(e2k(s),Tbl_UTF8,to);
+		return recodeString(e2k(s),Tbl_KOI8,to);
 	if (to   == "translit")		// special
-		return k2e(recodeString(s,from,Tbl_UTF8));
+		return k2e(recodeString(s,from,Tbl_KOI8));
 
 	if (to   == "html" && from != to)
 		return txt2html(s);
 	if (from == "html")
-		return recodeString(html2txt(s),Tbl_UTF8,to);
+		return recodeString(html2txt(s),Tbl_KOI8,to);
 
 	var t = "";
 	var i;
