@@ -12,7 +12,7 @@
 <!-- Begin to hide script contents from old browsers.
 
 //
-// Copyright (c) Alexey Roytman, 2002-2004
+// Copyright (c) Alexey Roytman, 2002-2004,2018
 // roytman AT cs DOT bgu DOT ac DOT il
 //
 
@@ -97,12 +97,13 @@ var Tbl_GOST_alt=	" €‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»
 var Tbl_GOST_main=	" °±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞß›œ¥§ƒ„…†—•‘’‹Œ¡£¨¦©¤ªŽ“˜–™”š€‚‡ˆ‰ŠžŸ¢ «¬­®¯àáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ";
 var Tbl_MIC=		" €‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯ÐÑÒÓÔ????ÆÇ×Ø??ÏÀÁÂÃÄÅ??ÈÉÊËÌÍÎ??????????ÙÚÛÜÝÞß°±²³´µ¶·¸¹º»¼½¾¿ðñòóôõö÷øùúûÕÖþÿ";
 var Tbl_KOI8=		" áâ÷çäåöúéêëìíîïðòóôõæèãþûýÿùøüàñÁÂ×ÇÄÅÖÚÉÊËÌÍÎÏÐ‘’‡²´§¦µ¡¨®­¬ƒ„‰ˆ†€Š¯°«¥»¸± ¾¹º¶·ª©¢¤½¼…‚ŒŽ‹ÒÓÔÕÆÈÃÞÛÝßÙØÜÀÑ³£™˜“›Ÿ—œ•ž–¿”š";
-var Tbl_BESTA=          " ÁÂ×ÇÄÅÖÚÉÊËÌÍÎÏÐÒÓÔÕÆÈÃÞÛÝßÙØÜÀÑáâ÷çäåöúéêëìíîïð‘’‡²´§¦µ¡¨®­¬ƒ„‰ˆ†€Š¯°«¥»¸± ¾¹º¶·ª©¢¤½¼…‚ŒŽ‹òóôõæèãþûýÿùøüàñ£³˜™“›Ÿ—œ•ž–¿”š";
+var Tbl_BESTA=		" ÁÂ×ÇÄÅÖÚÉÊËÌÍÎÏÐÒÓÔÕÆÈÃÞÛÝßÙØÜÀÑáâ÷çäåöúéêëìíîïð‘’‡²´§¦µ¡¨®­¬ƒ„‰ˆ†€Š¯°«¥»¸± ¾¹º¶·ª©¢¤½¼…‚ŒŽ‹òóôõæèãþûýÿùøüàñ£³˜™“›Ÿ—œ•ž–¿”š";
 var Tbl_CP1251=		" ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîï                                                ðñòóôõö÷øùúûüýþÿ¨¸              ";
 var Tbl_ISO8859_5=	" °±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞß                                                àáâãäåæçèéêëìíîï¡ñ              ";
 var Tbl_KOI7=		" abwgdevzijklmnoprstufhc~{}\"yx|`qABWGDEVZIJKLMNOP                                                RSTUFHC^[]_YX\\@Q$#              ";
 var Tbl_KOI7_inv=	" ABWGDEVZIJKLMNOPRSTUFHC^[]_YX\\@Qabwgdevzijklmnop                                                rstufhc~{}\"yx|`q#$              ";
 var Tbl_Macintosh=	" €‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßðñòóôõö÷øùúûüýþÿ ¡¢£¤¥¦§¨©ª«¬­®¯àáâãäåæçèéêëìíîï";
+var Tbl_UTF8=		" \x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f\x20\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3a\x3b\x3c\x3d\x3e\x3f                                                \x40\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4a\x4b\x4c\x4d\x4e\x4f\x01\x51";
 
 // convert a letter to case(0=lower,1=upper) when encoded in KOI8 encoding
 function k2case(c,up) {
@@ -433,7 +434,13 @@ function recodeString(s, from, to) {
 		if (c != " " && c != "\n" && c != "\r")	{
 			var ind = from.indexOf(c);
 			if (ind != -1)	{
-				c = to.charAt(ind);
+				if (to == Tbl_UTF8)	{
+					c = to.charCodeAt(ind);
+					c += 0x0400;	// UTF-8 page for Cyrillic
+					c = String.fromCharCode(c);
+				}
+				else
+					c = to.charAt(ind);
 			}
 		}
 
@@ -457,6 +464,7 @@ function selectedTable(x) {
 	else if (c == "iso")		return Tbl_ISO8859_5;
 	else if (c == "koi7")		return Tbl_KOI7;
 	else if (c == "koi7i")		return Tbl_KOI7_inv;
+	else if (c == "utf8")		return Tbl_UTF8;
 	else if (c == "html")		return c;	// special encoding, not tr(1) table
 
 	alert("Wrong selection encoding: '"+c+"'");
@@ -474,6 +482,7 @@ function selectedEncodingToCharset() {
 	else if (c == "iso")		return "iso-8859-5";
 	else if (c == "koi7")		return null;
 	else if (c == "koi7i")		return null;
+	else if (c == "utf8")		return "UTF-8";
 	else if (c == "html")		return null;
 }
 
@@ -525,7 +534,10 @@ function setTextArea() {
 "Osobye propisnye bukvy:\n"+
 " `` '' \n"+
 "Obychnye propisnye bukvy\n"+
-" A B V ... Jo/JO/Yo/YO ... \\E JU/Ju Q/Ja/JA/Ya/YA \n";
+" A B V ... Jo/JO/Yo/YO ... \\E JU/Ju Q/Ja/JA/Ya/YA \n"+
+"\n"+
+"ABVGDEJoZhZIJKLMNOPRSTUFXCChShShch``Y''\\EJuJa\n"+
+"abvgdejozhzijklmnoprstufxcchshshch`y'\\ejuja\n";
 }
 
 // End the hiding here. -->
@@ -539,7 +551,7 @@ ReCoder in JavaScript
 <BODY>
 <H1>ReCoder in JavaScript</H1>
 <FONT SIZE="-2">Written by Alexey Roytman, 2002.
-                Modified on January 24, 2004</FONT><BR>
+                Modified on August 29, 2018</FONT><BR>
 This small utility recodes Cyrillic text from one encoding to another.<BR>
 For instructions and description see below the input areas.<BR>
 
@@ -559,6 +571,9 @@ Odnazhdy v studjonuju zimnjuju poru
 Q iz lesu vyshel -- byl sil'nyj moroz.
 Glyazhu -- podnimaetsq medlenno v goru
 Loshadka, vezushchaq xvorostu voz.
+
+ABVGDEJoZhZIJKLMNOPRSTUFXCChShShch``Y''\EJuJa
+abvgdejozhzijklmnoprstufxcchshshch`y'\ejuja
 </TEXTAREA>
 <BR>
 
@@ -578,6 +593,7 @@ Loshadka, vezushchaq xvorostu voz.
 <OPTION          VALUE="iso"      LANG="...">ISO-8859-5      </OPTION>
 <OPTION          VALUE="koi7"     LANG="...">KOI-7           </OPTION>
 <OPTION          VALUE="koi7i"    LANG="...">KOI-7 inverted  </OPTION>
+<OPTION          VALUE="utf8"     LANG="...">UTF-8           </OPTION>
 <OPTION          VALUE="html"     LANG="...">HTML            </OPTION>
 </SELECT>
 
@@ -587,12 +603,13 @@ Loshadka, vezushchaq xvorostu voz.
 <SELECT NAME="encodingTo"   SIZE=1 LANG="iso8859-5" DIR=ltr>Encoding
 <OPTION          VALUE="translit" LANG="...">Transliteration </OPTION>
 <OPTION          VALUE="alt"      LANG="...">GOST Alternative</OPTION>
-<OPTION SELECTED VALUE="koi8"     LANG="...">KOI-8           </OPTION>
+<OPTION          VALUE="koi8"     LANG="...">KOI-8           </OPTION>
 <OPTION          VALUE="win"      LANG="...">Windows CP-1251 </OPTION>
 <OPTION          VALUE="besta"    LANG="...">Besta           </OPTION>
 <OPTION          VALUE="iso"      LANG="...">ISO-8859-5      </OPTION>
 <OPTION          VALUE="koi7"     LANG="...">KOI-7           </OPTION>
 <OPTION          VALUE="koi7i"    LANG="...">KOI-7 inverted  </OPTION>
+<OPTION SELECTED VALUE="utf8"     LANG="...">UTF-8           </OPTION>
 <OPTION          VALUE="html"     LANG="...">HTML            </OPTION>
 </SELECT><BR>
 <!--
