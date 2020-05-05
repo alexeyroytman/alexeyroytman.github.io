@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<noscript>
+<B>This page uses JavaScript.</B><BR>
+</noscript>
+
+<script language="JavaScript">
+
+const prefix1 = "Octets</SPAN></TD>\n<TD>";
+const prefixTD = "<TD>";
+const prefixTD2 = "</TD>";
+
+var inboundStr = "";
+var outboundStr = "";
+
+function extractText(body) {
+
+	var pos1 = body.indexOf(prefix1);
+	pos1 += prefix1.length;
+	var pos2 = body.indexOf(prefixTD2, pos1);
+	inboundStr = body.substr(pos1, pos2-pos1).trim();
+	//alert("!"+inboundStr+"!");
+
+	pos2 += prefixTD2.length;
+
+	pos1 = body.indexOf(prefixTD, pos2);
+	pos1 += prefixTD.length;
+	pos2 = body.indexOf(prefixTD2, pos1);
+	outboundStr = body.substr(pos1, pos2-pos1).trim();
+	//alert("!"+outboundStr+"!");
+}
+
+var isStarted = false;
+
+function setEnabled(f) {
+	if (f) {
+		document.theForm.theStart.disabled = true;
+		document.theForm.theStop.disabled = false;
+		isStarted = true;
+	}
+	else {
+		document.theForm.theStart.disabled = false;
+		document.theForm.theStop.disabled = true;
+		isStarted = false;
+	}
+}
+/*
+var body = "<TH WIDTH=35%><SPAN ID=_29>Statistics of WAN</SPAN></TH>\n"+
+"<TH WIDTH=35%><SPAN ID=_30>Inbound</SPAN></TH>\n"+
+"<TH WIDTH=30%><SPAN ID=_31>Outbound</SPAN></TH>\n"+
+"</TR><TR>\n"+
+"<TD><SPAN ID=_32>Octets</SPAN></TD>\n"+
+"<TD>393325038 </TD>\n"+
+"<TD>8075671 </TD>\n"+
+"</TR><TR>\n"+
+"<TD><SPAN ID=_33>Unicast Packets</SPAN></TD>\n";
+extractText(body);
+*/
+
+function transferFailed(evt) {
+	setEnabled(false);
+	document.theForm.theTextarea.value += "An error occurred while transferring.\n";
+}
+
+function transferCanceled(evt) {
+	setEnabled(false);
+	document.theForm.theTextarea.value += "The transfer has been canceled by the user.\n";
+}
+
+const bw_in_bps  = 15000000; // 15     Mbps
+const bw_out_bps =   800000; //  0.800 Mbps
+const bw_in_theorK  = Math.round(bw_in_bps  / 1024 / 8);  // - theoretical: google: 15  megabits in kibibytes
+const bw_out_theorK = Math.round(bw_out_bps / 1024 / 8);  // - theoretical: google: 800 kilobits in kibibytes
+const bw_in_measK  = 1940; //  360 kb/s ~= 2.5   Mbps - as measured previously
+const bw_out_measK =   95; //   56 kb/s ~= 0.256 Mbps - as measured previously
+const bw_in_meas  = bw_in_measK  * 1024;
+const bw_out_meas = bw_out_measK * 1024;
+
+
+function bytesToSpeed(newVal, oldVal, maxVal) {
+	if (oldVal == 0)
+		return null;
+	var speed = (newVal - oldVal) / delay;
+	var prefix = "B/s";
+	var pct = Math.round(speed * 100 / maxVal);
+	if (speed > 10240) {
+		speed /= 1024;
+		prefix = "KiB/s";
+	}
+	var str = speed + " " + prefix + " " + pct;
+	return str;
+}
+
+var url;
+const delay = 5;
+const count = 20;
+
+var countIdx = 0;
+var inboundOld = 0;
+var outboundOld = 0;
+
+var oReq = new XMLHttpRequest();
+
+function doSend() {
+	oReq.send();
+}
+
+function transferComplete(evt) {
+	if (! isStarted || countIdx >= count) {
+		setEnabled(false);
+		return;
+	}
+	extractText(xhr.responseText);
+	var str1 = bytesToSpeed(inboundStr, inboundOld, bw_in_meas);
+	var str2 = bytesToSpeed(outboundStr, outboundOld, bw_out_meas);
+	inboundOld = inboundStr;
+	outboundOld = outboundStr;
+	var str = "	Inbound speed = " + str1 + "	Outbound speed = " + str2 + "\n";
+	document.theForm.theTextarea.value += str;
+	setTimeout(doSend, delay*1000);
+}
+
+//oReq.addEventListener("load", reqListener);
+//oReq.addEventListener("progress", updateProgress);
+oReq.addEventListener("load", transferComplete);
+oReq.addEventListener("error", transferFailed);
+oReq.addEventListener("abort", transferCanceled);
+oReq.open("GET", url);
+
+function startProcess() {
+	url = document.theForm.url.value;
+	document.theForm.theTextarea.value =
+		"Full BW: " + bw_in_theorK + " KiB/s	" + bw_out_theorK + " KiB/s	(theoretical)\n" +
+		"Full BW: " + bw_in_measK  + " KiB/s	" + bw_in_measK   + " KiB/s	(as measured previously for 1 thread)\n";
+	setEnabled(true);
+	countIdx = 0;
+	doSend();
+}
+
+function stopProcess() {
+	setEnabled(false);
+}
+
+</script>
+
+<title>Traffic of Level1</title>
+</head><body>
+
+<form action="#" name="theForm">
+
+<input type="text" name="url" value="http://192.168.0.1/status.htm" size="40">
+<br>
+<input type="button" onClick="startProcess()"   name="theStart" value="Start">
+<input type="button" onClick="stopProcess()"    name="theStop"  value="Stop">
+<br>
+<textarea name="theTextarea" cols=80 rows=22>
+</textarea>
+<br>
+</form>
+
+</body></html>
+
