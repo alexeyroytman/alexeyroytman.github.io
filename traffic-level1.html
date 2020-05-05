@@ -118,7 +118,7 @@ function transferComplete(evt) {
 	var str2 = bytesToSpeed(outboundStr, outboundOld, bw_out_meas);
 	inboundOld = inboundStr;
 	outboundOld = outboundStr;
-	var str = (new Date()) + "	Inbound speed = " + str1 + "	Outbound speed = " + str2 + "\n";
+	var str = (new Date()).toLocaleDateString() + "	Inbound speed = " + str1 + "	Outbound speed = " + str2 + "\n";
 	document.theForm.theTextarea.value += str;
 	setTimeout(doSend, delay*1000);
 }
