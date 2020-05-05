@@ -104,6 +104,7 @@ var outboundOld = 0;
 var oReq = new XMLHttpRequest();
 
 function doSend() {
+	oReq.open("GET", url);
 	oReq.send();
 }
 
@@ -127,7 +128,6 @@ function transferComplete(evt) {
 oReq.addEventListener("load", transferComplete);
 oReq.addEventListener("error", transferFailed);
 oReq.addEventListener("abort", transferCanceled);
-oReq.open("GET", url);
 
 function startProcess() {
 	url = document.theForm.url.value;
